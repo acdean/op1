@@ -32,8 +32,6 @@ public static final float TS = 8; // texture separator
 public static final String BACKGROUND = "ffc3c9c9";
 public static final String KEY_COLOUR = "ffdee9e9";
 
-PShape keyShape;
-
 List<Thing> things = new ArrayList<Thing>();
 PeasyCam cam;
 PImage tex;
@@ -41,6 +39,7 @@ PImage buttonTex;
 PImage panelTex;
 PImage grillTex;
 PImage dialTex;
+Tile tile1x1, tile1x2, tile2x1, tile2x2, tile4x2, tile1_5x1;
 
 void setup() {
   size(800, 600, P3D);
@@ -51,6 +50,15 @@ void setup() {
   panelTex = loadImage("op1_panel.png");
   grillTex = loadImage("op1_grill.png");
   dialTex = loadImage("op1_dials.png");
+  
+  // tiles
+  tile1x1 = new Tile(1, 1);
+  tile1x2 = new Tile(1, 2);
+  tile2x1 = new Tile(2, 1);
+  tile2x2 = new Tile(2, 2);
+  tile4x2 = new Tile(4, 2);
+  tile1_5x1 = new Tile(1.5, 1);
+
   // body
   things.add(new Body(0, 0));
   // line 0
@@ -124,12 +132,9 @@ void setup() {
 
 void draw() {
   background(192);
-  //directionalLight(192, 192, 192, 0, 0, -1);
-  //directionalLight(128, 0, 0, 0, 0, 1);
-  //ambientLight(102, 102, 102);
-  noLights();
-  //directionalLight(128, 128, 128, 0, 0, -1);
-  //directionalLight(128, 128, 128, 0, 0, 1);
+  translate(-1404, -470);  // centre - calculated in Body._draw
+  lights();
+  directionalLight(128, 128, 128, 0, 0, 1);  // reverse angle light for backside
   noStroke();
   for (Thing thing : things) {
     thing.draw();
@@ -138,8 +143,12 @@ void draw() {
 
 class VolumeButton extends Thing {
   VolumeButton(float x, float y) {
-    super(x, y);
+    super(tile2x1, x, y);
     w = W2;
+  }
+  @Override
+  protected void _draw() {
+    // TODO add volume button
   }
 }
 
@@ -150,21 +159,18 @@ class Button extends Thing {
   short tindex;
 
   Button(float x, float y, int tindex) {
-    super(x, y);
+    super(tile1x1, x, y);
     this.tindex = (short)tindex;
   }
 
   @Override
   protected void _draw() {
-    //super._draw();
     if (shape == null) {
       println("Creating ButtonShape");
       shape = createShape(GROUP);
       PShape[] children = cylinder(w / 2.0, h / 2.0, BUTTON_RAD, STUB, tindex);
       shape.addChild(children[0]);
       shape.addChild(children[1]);
-      PShape tile = myBox();
-      shape.addChild(tile);
     }
     shape(shape);
   }
@@ -173,14 +179,13 @@ class Button extends Thing {
 class Display extends Thing {
   PShape shape;
   Display(float x, float y) {
-    super(x, y);
+    super(tile4x2, x, y);
     w = W + S + W + S + W + S + W;
     h = H2;
   }
 
   @Override
   protected void _draw() {
-    //super._draw();
     if (shape == null) {
       shape = createShape();
       shape.beginShape(QUAD);
@@ -198,14 +203,13 @@ class Display extends Thing {
 class Grill extends Thing {
   PShape shape;
   Grill(float x, float y) {
-    super(x, y);
+    super(tile2x2, x, y);
     w = W2;
     h = H2;
   }
 
   @Override
   protected void _draw() {
-    //super._draw();
     if (shape == null) {
       shape = createShape();
       shape.beginShape(QUAD);
@@ -227,7 +231,7 @@ class Dial extends Thing {
   short tindex;
 
   Dial(float x, float y, int tindex) {
-    super(x, y);
+    super(tile2x2, x, y);
     w = W2;
     h = H2;
     this.tindex = (short)tindex;
@@ -235,71 +239,14 @@ class Dial extends Thing {
 
   @Override
   protected void _draw() {
-    //super._draw();
     if (shape == null) {
       println("Creating Dial");
       shape = createShape(GROUP);
       PShape[] children = cylinder(w / 2.0, h / 2.0, BUTTON_RAD, DIAL_HEIGHT, tindex);
       shape.addChild(children[0]);
       shape.addChild(children[1]);
-      PShape tile = myBox();
-      shape.addChild(tile);
     }
     shape(shape);
-  }
-}
-
-class Key extends Thing {
-
-  Key(float x, float y) {
-    super(x, y);
-    h = H2;
-  }
-
-  // elongated version of button
-  @Override
-  protected void _draw() {
-    fill(unhex(KEY_COLOUR));
-    if (keyShape == null) {
-      println("Creating KeyShape");
-      float left = w / 2 - BUTTON_RAD;
-      float right = w / 2 + BUTTON_RAD;
-      float top = 25 + BUTTON_RAD;
-      float bottom = h - 25 - BUTTON_RAD;
-      PShape child = createShape();
-      // repeated coords so that normals are correct
-      child.beginShape(QUADS);
-      child.fill(unhex(KEY_COLOUR));
-      // left
-      child.vertex(left, top, z + d);
-      child.vertex(left, bottom, z + d);
-      child.vertex(left, bottom, z + d + STUB);
-      child.vertex(left, top, z + d + STUB);
-      // top
-      child.vertex(left, top, z + d + STUB);
-      child.vertex(left, bottom, z + d + STUB);
-      child.vertex(right, bottom, z + d + STUB);
-      child.vertex(right, top, z + d + STUB);
-      // right
-      child.vertex(right, top, z + d + STUB);
-      child.vertex(right, bottom, z + d + STUB);
-      child.vertex(right, bottom, z + d);
-      child.vertex(right, top, z + d);
-      child.endShape();
-      // create actual shape
-      keyShape = createShape(GROUP);
-      PShape[] shapes = buttonShape(w / 2, top, BUTTON_RAD, TOP);
-      keyShape.addChild(shapes[0]);
-      keyShape.addChild(shapes[1]);
-      keyShape.addChild(child);
-      shapes = buttonShape(w / 2, bottom, BUTTON_RAD, BOTTOM);
-      keyShape.addChild(shapes[0]);
-      keyShape.addChild(shapes[1]);
-      // underlying tile
-      PShape tile = myBox();
-      keyShape.addChild(tile);
-    }
-    shape(keyShape);
   }
 }
 
@@ -312,16 +259,19 @@ class BlackKey extends Thing {
   int allignment;
 
   BlackKey(float x, float y, int allignment) {
-    super(x, y);
+    super(null, x, y);
     if (allignment == RIGHT || allignment == LEFT) {
+      // this key is 1.5 wide
       w = WH;
+      this.baseTile = tile1_5x1;
+    } else {
+      this.baseTile = tile1x1;
     }
     this.allignment = allignment;
   }
 
   @Override
   protected void _draw() {
-    super._draw();
     if (shape == null) {
       println("Creating BlackKeyShape");
       shape = createShape(GROUP);

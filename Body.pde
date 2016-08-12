@@ -5,12 +5,11 @@ class Body extends Thing {
   int allignment;
 
   Body(float x, float y) {
-    super(x, y);
+    super(null, x, y);
   }
 
   @Override
   protected void _draw() {
-    super._draw();
     if (shape == null) {
       println("Creating Body");
       shape = createShape();
@@ -26,6 +25,8 @@ class Body extends Thing {
       float y2 = y + (6 * H) + (5 * S);  // nb spacing
       float y3 = y2 + BOTTOM_MARGIN;
       float z = -STUB / 2.0;
+      println("X: " + x0 + " , " + x3 + " = " + ((x3 + x0) / 2));
+      println("Y: " + y0 + " , " + y3 + " = " + ((y3 + y0) / 2));
       
 // A------------C   A = 0, 0
 // | B--------D |   Y1 = TOP_MARGIN

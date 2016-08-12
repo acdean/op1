@@ -1,9 +1,11 @@
 class Thing {
+  Tile baseTile;
   PShape shape;
   float x, y, z;
   float w, h, d;
 
-  Thing(float x, float y) {
+  Thing(Tile t, float x, float y) {
+    baseTile = t;
     this.x = x;
     this.y = y;
     this.z = -STUB;
@@ -15,15 +17,15 @@ class Thing {
   void draw() {
     pushMatrix();
     translate(x2x(x), y2y(y));
+    if (baseTile != null) {
+      baseTile.draw();
+    }
     _draw();
     popMatrix();
   }
   // override this
   protected void _draw() {
-    if (shape == null) {
-      shape = myBox();
-    }
-    shape(shape);
+    println("_draw: must override this");
   }
 
   float x2x(float in) {
@@ -71,47 +73,6 @@ class Thing {
     return textureY0() + h;
   }
 
-  // base of everything
-  PShape myBox() {
-    println("Creating Tile");
-    PShape p = createShape();
-    p.beginShape(QUADS);
-    p.fill(unhex(BACKGROUND));
-    // top
-    p.vertex(0, 0, z + d);
-    p.vertex(w, 0, z + d);
-    p.vertex(w, h, z + d);
-    p.vertex(0, h, z + d);
-    // bottom
-//    p.fill(128, 0, 0);
-//    p.vertex(0, 0, z);
-//    p.vertex(w, 0, z);
-//    p.vertex(w, h, z);
-//    p.vertex(0, h, z);
-    // y side
-    p.vertex(0, 0, z);
-    p.vertex(0, 0, z + d);
-    p.vertex(w, 0, z + d);
-    p.vertex(w, 0, z);
-    // x side
-    p.vertex(0, 0, z);
-    p.vertex(0, 0, z + d);
-    p.vertex(0, h, z + d);
-    p.vertex(0, h, z);
-    // y side
-    p.vertex(0, h, z);
-    p.vertex(0, h, z + d);
-    p.vertex(w, h, z + d);
-    p.vertex(w, h, z);
-    // x side
-    p.vertex(w, 0, z);
-    p.vertex(w, 0, z + d);
-    p.vertex(w, h, z + d);
-    p.vertex(w, h, z);
-    p.endShape();
-    return p;
-  }
-  
   int ALL = 999;
   short NO_TEX = -1;
   PShape[] buttonShape(float bx, float by, float r) {
@@ -147,6 +108,7 @@ class Thing {
     }
     PShape p1 = createShape();
     p1.beginShape(POLYGON);
+    p1.stroke(255, 0, 0);
     p1.fill(unhex(KEY_COLOUR));
     p1.texture(buttonTex);
 //    p1.vertex(bx, by, z + d + STUB, textureX(tindex, 0), textureY(tindex, 0));
