@@ -71,22 +71,23 @@ class Thing {
     return textureY0() + h;
   }
 
+  // base of everything
   PShape myBox() {
     println("Creating Tile");
-    fill(unhex(BACKGROUND));
     PShape p = createShape();
     p.beginShape(QUADS);
-    p.fill(#c3c9c9);
+    p.fill(unhex(BACKGROUND));
     // top
     p.vertex(0, 0, z + d);
-    p.vertex(0, h, z + d);
-    p.vertex(w, h, z + d);
     p.vertex(w, 0, z + d);
+    p.vertex(w, h, z + d);
+    p.vertex(0, h, z + d);
     // bottom
-    p.vertex(0, 0, z);
-    p.vertex(w, 0, z);
-    p.vertex(w, h, z);
-    p.vertex(0, h, z);
+//    p.fill(128, 0, 0);
+//    p.vertex(0, 0, z);
+//    p.vertex(w, 0, z);
+//    p.vertex(w, h, z);
+//    p.vertex(0, h, z);
     // y side
     p.vertex(0, 0, z);
     p.vertex(0, 0, z + d);
@@ -146,6 +147,7 @@ class Thing {
     }
     PShape p1 = createShape();
     p1.beginShape(POLYGON);
+    p1.fill(unhex(KEY_COLOUR));
     p1.texture(buttonTex);
 //    p1.vertex(bx, by, z + d + STUB, textureX(tindex, 0), textureY(tindex, 0));
     for (int i = start ; i <= end ; i++) {
@@ -160,6 +162,7 @@ class Thing {
     // sides
     PShape p2 = createShape();
     p2.beginShape(QUAD_STRIP);
+    p2.fill(unhex(KEY_COLOUR));
     for (int i = start ; i <= end ; i++) {
       float a = TWO_PI * i / SEGMENTS;
       p2.vertex(bx + r * cos(a), by + r * sin(a), z + d);
@@ -179,6 +182,7 @@ class Thing {
     }
     PShape p1 = createShape();
     p1.beginShape(POLYGON);
+    p1.fill(unhex(KEY_COLOUR));
     if (h == STUB) {
       // standard button
       p1.texture(buttonTex);
@@ -205,6 +209,7 @@ class Thing {
     // sides
     PShape p2 = createShape();
     p2.beginShape(QUAD_STRIP);
+    p2.fill(unhex(KEY_COLOUR));
     for (int i = start ; i <= end ; i++) {
       float a = TWO_PI * i / SEGMENTS;
       p2.vertex(bx + r * cos(a), by + r * sin(a), z + d);

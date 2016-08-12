@@ -3,13 +3,20 @@
 // TODO
 // knobs
 // make 1x1 tile a common pshape
+// round corners on the body
 
 import java.util.List;
 import peasy.*;
 
+// measurements are taken from png, except D which is 8th of total height according to specs
 public static final float W = 150;  // width of a button
 public static final float H = 150;  // height of a button
 public static final float S = 8;    // separation = 8
+public static final float TOP_MARGIN = 45;
+public static final float LEFT_MARGIN = TOP_MARGIN;
+public static final float BOTTOM_MARGIN = TOP_MARGIN;
+public static final float RIGHT_MARGIN = 175;
+public static final float D = (TOP_MARGIN + (6 * H) + (5 * S) + BOTTOM_MARGIN) / 8.0; 
 public static final float STUB = 10; // height of a tile, height of a button
 public static final float DECAL = .02; // height of decal
 public static final float W2 = W + S + W; // double width key
@@ -44,6 +51,8 @@ void setup() {
   panelTex = loadImage("op1_panel.png");
   grillTex = loadImage("op1_grill.png");
   dialTex = loadImage("op1_dials.png");
+  // body
+  things.add(new Body(0, 0));
   // line 0
   things.add(new Grill(0, 0));
   things.add(new VolumeButton(2, 0));
@@ -118,7 +127,9 @@ void draw() {
   //directionalLight(192, 192, 192, 0, 0, -1);
   //directionalLight(128, 0, 0, 0, 0, 1);
   //ambientLight(102, 102, 102);
-  lights();
+  noLights();
+  //directionalLight(128, 128, 128, 0, 0, -1);
+  //directionalLight(128, 128, 128, 0, 0, 1);
   noStroke();
   for (Thing thing : things) {
     thing.draw();
@@ -145,6 +156,7 @@ class Button extends Thing {
 
   @Override
   protected void _draw() {
+    //super._draw();
     if (shape == null) {
       println("Creating ButtonShape");
       shape = createShape(GROUP);
@@ -168,7 +180,7 @@ class Display extends Thing {
 
   @Override
   protected void _draw() {
-    super._draw();
+    //super._draw();
     if (shape == null) {
       shape = createShape();
       shape.beginShape(QUAD);
@@ -193,7 +205,7 @@ class Grill extends Thing {
 
   @Override
   protected void _draw() {
-    super._draw();
+    //super._draw();
     if (shape == null) {
       shape = createShape();
       shape.beginShape(QUAD);
@@ -223,6 +235,7 @@ class Dial extends Thing {
 
   @Override
   protected void _draw() {
+    //super._draw();
     if (shape == null) {
       println("Creating Dial");
       shape = createShape(GROUP);
@@ -256,6 +269,7 @@ class Key extends Thing {
       PShape child = createShape();
       // repeated coords so that normals are correct
       child.beginShape(QUADS);
+      child.fill(unhex(KEY_COLOUR));
       // left
       child.vertex(left, top, z + d);
       child.vertex(left, bottom, z + d);
@@ -305,7 +319,6 @@ class BlackKey extends Thing {
     this.allignment = allignment;
   }
 
-// TODO position of button within tile
   @Override
   protected void _draw() {
     super._draw();
