@@ -1,9 +1,8 @@
 // a spinning op-1
 // acd 2016
 // TODO
-// knobs
-// make 1x1 tile a common pshape
-// round corners on the body
+// on / off
+// right hand side texture
 
 import java.util.List;
 import peasy.*;
@@ -40,16 +39,23 @@ PImage panelTex;
 PImage grillTex;
 PImage dialTex;
 Tile tile1x1, tile1x2, tile2x1, tile2x2, tile4x2, tile1_5x1;
+float rx, ry, rz, dx, dy, dz;
+
+boolean record = false;
 
 void setup() {
-  size(800, 600, P3D);
-  cam = new PeasyCam(this, 500);
+  size(640, 360, P3D);
+  cam = new PeasyCam(this, 1600);
   // texture
   tex = loadImage("op1.png");
   buttonTex = loadImage("op1_buttons.png");
   panelTex = loadImage("op1_panel.png");
   grillTex = loadImage("op1_grill.png");
   dialTex = loadImage("op1_dials.png");
+  
+  dx = random(-.02, .02);
+  dy = random(-.02, .02);
+  dz = random(-.02, .02);
   
   // tiles
   tile1x1 = new Tile(1, 1);
@@ -131,13 +137,25 @@ void setup() {
 }
 
 void draw() {
-  background(192);
+  background(255);
+  rx += dx;
+  ry += dy;
+  rz += dz;
+  //rotateX(rx);
+  //rotateY(ry);
+  //rotateZ(rz);
   translate(-1404, -470);  // centre - calculated in Body._draw
   lights();
   directionalLight(128, 128, 128, 0, 0, 1);  // reverse angle light for backside
   noStroke();
   for (Thing thing : things) {
     thing.draw();
+  }
+  if (record) {
+    saveFrame("op1_####.jpg");
+    if (frameCount > 1000) {
+      exit();
+    }
   }
 }
 

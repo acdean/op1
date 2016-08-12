@@ -8,51 +8,80 @@ class Body extends Thing {
     super(null, x, y);
   }
 
+  // /-------\
+  // |       | 0
+  // \-------/
   @Override
   protected void _draw() {
     if (shape == null) {
       println("Creating Body");
-      shape = createShape();
-      shape.beginShape(QUAD_STRIP);
-      shape.fill(unhex(BACKGROUND));
-
-      float x0 = x - LEFT_MARGIN;
-      float x1 = x;
-      float x2 = x + (17 * W) + (16 * S);  // nb spacing
-      float x3 = x2 + RIGHT_MARGIN;
-      float y0 = y - TOP_MARGIN;
-      float y1 = y;
-      float y2 = y + (6 * H) + (5 * S);  // nb spacing
-      float y3 = y2 + BOTTOM_MARGIN;
-      float z = -STUB / 2.0;
-      println("X: " + x0 + " , " + x3 + " = " + ((x3 + x0) / 2));
-      println("Y: " + y0 + " , " + y3 + " = " + ((y3 + y0) / 2));
       
-// A------------C   A = 0, 0
-// | B--------D |   Y1 = TOP_MARGIN
-// | |        | |
-// | H--------F |   Y2 = TOP_MARGIN + 6 * H
-// G------------E   Y3 = TOP_MARGIN + 6 * H + BOTTOM_MARGIN
-// X X        X X
-//   1        2 3   X1 = x + LEFT_MARGIN
-//                  X2 = X1 + 17 * W
-//                  X3 = X2 + RIGHT_MARGIN
+      ArrayList<PVector> points = new ArrayList();
+     
+      float x1 = x - LEFT_MARGIN + BUTTON_RAD;  // top left x and y
+      float y1 = y - TOP_MARGIN + BUTTON_RAD;
+      float x2 = x + (17 * W) + (16 * S) + RIGHT_MARGIN - BUTTON_RAD;  // bottom left x and y
+      float y2 = y + (6 * H) + (5 * S) + BOTTOM_MARGIN - BUTTON_RAD;  // bottom left x and y
+      float z0 = -5;
+      float z1 = -D;
 
-      // ABCD
-      shape.vertex(x0, y0, z); // A
-      shape.vertex(x1, y1, z); // B
-      shape.vertex(x3, y0, z); // C
-      shape.vertex(x2, y1, z); // D
-      // EF
-      shape.vertex(x3, y3, z);  // E
-      shape.vertex(x2, y2, z);  // F
-      // GH
-      shape.vertex(x0, y3, z);  // G
-      shape.vertex(x1, y2, z);  // H
-      // AB
-      shape.vertex(x0, y0, z); // A
-      shape.vertex(x1, y1, z); // B
-      shape.endShape();
+      // top left
+      for (int i = SEGMENTS / 2 ; i <= SEGMENTS * 3 / 4 ; i++) {  // NB equals
+        float a = TWO_PI * i / SEGMENTS;
+        points.add(new PVector(x1 + BUTTON_RAD * cos(a), y1 + BUTTON_RAD * sin(a)));
+      }
+      // top right
+      for (int i = SEGMENTS * 3 / 4 ; i <= SEGMENTS ; i++) {
+        float a = TWO_PI * i / SEGMENTS;
+        points.add(new PVector(x2 + BUTTON_RAD * cos(a), y1 + BUTTON_RAD * sin(a)));
+      }
+      // bottom right
+      for (int i = 0 ; i <= SEGMENTS / 4 ; i++) {
+        float a = TWO_PI * i / SEGMENTS;
+        points.add(new PVector(x2 + BUTTON_RAD * cos(a), y2 + BUTTON_RAD * sin(a)));
+      }
+      // bottom left
+      for (int i = SEGMENTS / 4 ; i <= SEGMENTS / 2 ; i++) {
+        float a = TWO_PI * i / SEGMENTS;
+        points.add(new PVector(x1 + BUTTON_RAD * cos(a), y2 + BUTTON_RAD * sin(a)));
+      }
+      
+      PShape topFace = createShape();
+      topFace.beginShape(POLYGON);
+      topFace.fill(unhex(BACKGROUND));
+      for (PVector p : points) {
+        topFace.vertex(p.x, p.y, z1);
+      }
+      topFace.vertex(points.get(0).x, points.get(0).y, z1);
+      topFace.endShape();
+
+      // bottom face is reverse order
+      PShape bottomFace = createShape();
+      bottomFace.beginShape(POLYGON);
+      bottomFace.fill(unhex(BACKGROUND));
+      for (int i = points.size() - 1 ; i >= 0 ; i--) { 
+        PVector p = points.get(i);
+        bottomFace.vertex(p.x, p.y, z0);
+      }
+      bottomFace.vertex(points.get(points.size() - 1).x, points.get(points.size() - 1).y, z1);
+      bottomFace.endShape();
+
+      // sides
+      PShape sides = createShape();
+      sides.beginShape(QUAD_STRIP);
+      sides.fill(unhex(BACKGROUND));
+      for (PVector p : points) {
+        sides.vertex(p.x, p.y, z0);
+        sides.vertex(p.x, p.y, z1);
+      }
+      sides.vertex(points.get(0).x, points.get(0).y, z0);
+      sides.vertex(points.get(0).x, points.get(0).y, z1);
+      sides.endShape();
+
+      shape = createShape(GROUP);
+      shape.addChild(topFace);
+      shape.addChild(bottomFace);
+      shape.addChild(sides);
     }
     shape(shape);
   }
