@@ -1,5 +1,7 @@
 // this is the main wraparound body
 class Body extends Thing {
+  
+  public static final float BODY_DEPTH = -5;
 
   PShape shape = null;
   int allignment;
@@ -22,7 +24,7 @@ class Body extends Thing {
       float y1 = y - TOP_MARGIN + BUTTON_RAD;
       float x2 = x + (17 * W) + (16 * S) + RIGHT_MARGIN - BUTTON_RAD;  // bottom left x and y
       float y2 = y + (6 * H) + (5 * S) + BOTTOM_MARGIN - BUTTON_RAD;  // bottom left x and y
-      float z0 = -5;
+      float z0 = BODY_DEPTH;
       float z1 = -D;
 
       // top left

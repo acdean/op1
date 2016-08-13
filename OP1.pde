@@ -1,8 +1,7 @@
 // a spinning op-1
 // acd 2016
 // TODO
-// on / off
-// right hand side texture
+// wireframe toggle
 
 import java.util.List;
 import peasy.*;
@@ -17,6 +16,7 @@ public static final float BOTTOM_MARGIN = TOP_MARGIN;
 public static final float RIGHT_MARGIN = 175;
 public static final float D = (TOP_MARGIN + (6 * H) + (5 * S) + BOTTOM_MARGIN) / 8.0; 
 public static final float STUB = 10; // height of a tile, height of a button
+public static final float DIAL_HEIGHT = STUB * 10;  // height of a dial
 public static final float DECAL = .02; // height of decal
 public static final float W2 = W + S + W; // double width key
 public static final float WH = ((W + S + W + S + W) - S) / 2; // W and a half - for black keys
@@ -38,9 +38,11 @@ PImage buttonTex;
 PImage panelTex;
 PImage grillTex;
 PImage dialTex;
+PImage rightTex;
 Tile tile1x1, tile1x2, tile2x1, tile2x2, tile4x2, tile1_5x1;
 float rx, ry, rz, dx, dy, dz;
 
+boolean wireframe = true;
 boolean record = false;
 
 void setup() {
@@ -52,6 +54,7 @@ void setup() {
   panelTex = loadImage("op1_panel.png");
   grillTex = loadImage("op1_grill.png");
   dialTex = loadImage("op1_dials.png");
+  rightTex = loadImage("op1_right.png");
   
   dx = random(-.02, .02);
   dy = random(-.02, .02);
@@ -76,6 +79,7 @@ void setup() {
   things.add(new Dial(12, 0, 2));
   things.add(new Dial(14, 0, 3));
   things.add(new Button(16, 0, 0));
+  things.add(new Right(17, 0));
   // line 1
   things.add(new Button(2, 1, 2));  // numbering cockup
   things.add(new Button(3, 1, 3));
@@ -159,21 +163,33 @@ void draw() {
   }
 }
 
+// similar to dial / buttom
 class VolumeButton extends Thing {
+
   VolumeButton(float x, float y) {
     super(tile2x1, x, y);
     w = W2;
   }
+
   @Override
   protected void _draw() {
-    // TODO add volume button
+    if (shape == null) {
+      println("Creating VolumeButtonShape");
+      shape = createShape(GROUP);
+      // NB this is treated as a 5th dial because of the height
+      PShape[] children = cylinder(w / 4.0, h / 2.0, BUTTON_RAD, DIAL_HEIGHT, (short)4);
+      shape.addChild(children[0]);
+      shape.addChild(children[1]);
+    }
+    shape(shape);
   }
 }
 
+// simple textured round button
 public static int SEGMENTS = 24;
 class Button extends Thing {
+
   // one of these for each button - because of decal
-  PShape shape = null;
   short tindex;
 
   Button(float x, float y, int tindex) {
@@ -194,8 +210,9 @@ class Button extends Thing {
   }
 }
 
+// tile and a decal
 class Display extends Thing {
-  PShape shape;
+
   Display(float x, float y) {
     super(tile4x2, x, y);
     w = W + S + W + S + W + S + W;
@@ -218,8 +235,9 @@ class Display extends Thing {
   }
 }
 
+// tile and a decal
 class Grill extends Thing {
-  PShape shape;
+
   Grill(float x, float y) {
     super(tile2x2, x, y);
     w = W2;
@@ -242,10 +260,34 @@ class Grill extends Thing {
   }
 }
 
+// no tile, only a decal
+class Right extends Thing {
+
+  Right(float x, float y) {
+    super(null, x, y);
+    w = W;                  // single button width
+    h = (6 * H) + (5 * S);  // 6 buttons high
+  }
+
+  @Override
+  protected void _draw() {
+    if (shape == null) {
+      shape = createShape();
+      shape.beginShape(QUAD);
+      shape.texture(rightTex);
+      // just a fraction above the body
+      shape.vertex(0, 0, Body.BODY_DEPTH + DECAL, 0, 0);
+      shape.vertex(0, h, Body.BODY_DEPTH + DECAL, 0, rightTex.height);
+      shape.vertex(w, h, Body.BODY_DEPTH + DECAL, rightTex.width, rightTex.height);
+      shape.vertex(w, 0, Body.BODY_DEPTH + DECAL, rightTex.width, 0);
+      shape.endShape();
+    }
+    shape(shape);
+  }
+}
+
+// pretty much same as button but higher
 class Dial extends Thing {
-  static final float DIAL_HEIGHT = STUB * 10;
-  // one of these for each button - because of decal
-  PShape shape = null;
   short tindex;
 
   Dial(float x, float y, int tindex) {
@@ -268,12 +310,12 @@ class Dial extends Thing {
   }
 }
 
+// complicated by size and allignment
 class BlackKey extends Thing {
   public static final int MIDDLE = 0;
   public static final int RIGHT = 1;
   public static final int LEFT = 2;
 
-  PShape shape = null;
   int allignment;
 
   BlackKey(float x, float y, int allignment) {
