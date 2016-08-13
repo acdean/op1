@@ -75,20 +75,24 @@ class Thing {
 
   int ALL = 999;
   short NO_TEX = -1;
-  PShape[] buttonShape(float bx, float by, float r) {
+  @Deprecated
+  PShape[] buttonShape_(float bx, float by, float r) {
     println("ButtonShape1");
-    return buttonShape(bx, by, r, ALL, NO_TEX);
+    return buttonShape_(bx, by, r, ALL, NO_TEX);
   }
-  PShape[] buttonShape(float bx, float by, float r, short tindex) {
+  @Deprecated
+  PShape[] buttonShape_(float bx, float by, float r, short tindex) {
     println("ButtonShape2");
-    return buttonShape(bx, by, r, ALL, tindex);
+    return buttonShape_(bx, by, r, ALL, tindex);
   }
-  PShape[] buttonShape(float bx, float by, float r, int part) {
+  @Deprecated
+  PShape[] buttonShape_(float bx, float by, float r, int part) {
     println("ButtonShape3");
-    return buttonShape(bx, by, r, part, NO_TEX);
+    return buttonShape_(bx, by, r, part, NO_TEX);
   }
   // part = TOP or BOTTOM or ALL (so we can use this to draw keys)
-  PShape[] buttonShape(float bx, float by, float r, int part, short tindex) {
+  @Deprecated
+  PShape[] buttonShape_(float bx, float by, float r, int part, short tindex) {
     println("ButtonShape: " + tindex);
     int start, end;
     if (part == BOTTOM) {
@@ -108,9 +112,14 @@ class Thing {
     }
     PShape p1 = createShape();
     p1.beginShape(POLYGON);
-    p1.stroke(255, 0, 0);
-    p1.fill(unhex(KEY_COLOUR));
-    p1.texture(buttonTex);
+    if (wireframe) {
+      p1.noFill();
+      p1.stroke(unhex(WIRE_COLOUR));
+    } else {
+      p1.noStroke();
+      p1.fill(unhex(KEY_COLOUR));
+      p1.texture(buttonTex);
+    }
 //    p1.vertex(bx, by, z + d + STUB, textureX(tindex, 0), textureY(tindex, 0));
     for (int i = start ; i <= end ; i++) {
       float a = TWO_PI * i / SEGMENTS;
@@ -124,7 +133,13 @@ class Thing {
     // sides
     PShape p2 = createShape();
     p2.beginShape(QUAD_STRIP);
-    p2.fill(unhex(KEY_COLOUR));
+    if (wireframe) {
+      p2.noFill();
+      p2.stroke(unhex(WIRE_COLOUR));
+    } else {
+      p2.fill(unhex(KEY_COLOUR));
+      p2.noStroke();
+    }
     for (int i = start ; i <= end ; i++) {
       float a = TWO_PI * i / SEGMENTS;
       p2.vertex(bx + r * cos(a), by + r * sin(a), z + d);
@@ -136,7 +151,7 @@ class Thing {
 
   // position, radius, height, texture
   PShape[] cylinder(float bx, float by, float r, float h, short tindex) {
-    println("ButtonShape: " + tindex);
+    println("Cylinder: " + tindex);
     int start = 0, end = SEGMENTS;
     // top
     if (tindex != NO_TEX) {  // debug
@@ -144,13 +159,19 @@ class Thing {
     }
     PShape p1 = createShape();
     p1.beginShape(POLYGON);
-    p1.fill(unhex(KEY_COLOUR));
-    if (h == STUB) {
-      // standard button
-      p1.texture(buttonTex);
+    if (wireframe) {
+      p1.noFill();
+      p1.stroke(unhex(WIRE_COLOUR));
     } else {
-      // dial
-      p1.texture(dialTex);
+      p1.noStroke();
+      p1.fill(unhex(KEY_COLOUR));
+      if (h == STUB) {
+        // standard button
+        p1.texture(buttonTex);
+      } else {
+        // dial
+        p1.texture(dialTex);
+      }
     }
 //    p1.vertex(bx, by, z + d + STUB, textureX(tindex, 0), textureY(tindex, 0));
     for (int i = start ; i <= end ; i++) {
@@ -171,7 +192,13 @@ class Thing {
     // sides
     PShape p2 = createShape();
     p2.beginShape(QUAD_STRIP);
-    p2.fill(unhex(KEY_COLOUR));
+    if (wireframe) {
+      p2.noFill();
+      p2.stroke(unhex(WIRE_COLOUR));
+    } else {
+      p2.noStroke();
+      p2.fill(unhex(KEY_COLOUR));
+    }
     for (int i = start ; i <= end ; i++) {
       float a = TWO_PI * i / SEGMENTS;
       p2.vertex(bx + r * cos(a), by + r * sin(a), z + d);

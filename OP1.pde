@@ -2,6 +2,7 @@
 // acd 2016
 // TODO
 // wireframe toggle
+// texture bottom of dials
 
 import java.util.List;
 import peasy.*;
@@ -30,6 +31,7 @@ public static final float TS = 8; // texture separator
 
 public static final String BACKGROUND = "ffc3c9c9";
 public static final String KEY_COLOUR = "ffdee9e9";
+public static final String WIRE_COLOUR = "ff00ff00";  // green
 
 List<Thing> things = new ArrayList<Thing>();
 PeasyCam cam;
@@ -42,11 +44,11 @@ PImage rightTex;
 Tile tile1x1, tile1x2, tile2x1, tile2x2, tile4x2, tile1_5x1;
 float rx, ry, rz, dx, dy, dz;
 
-boolean wireframe = true;
+boolean wireframe = false;
 boolean record = false;
 
 void setup() {
-  size(640, 360, P3D);
+  size(1280, 720, P3D);
   cam = new PeasyCam(this, 1600);
   // texture
   tex = loadImage("op1.png");
@@ -141,7 +143,11 @@ void setup() {
 }
 
 void draw() {
-  background(255);
+  if (wireframe) {
+    background(0);
+  } else {
+    background(255);
+  }
   rx += dx;
   ry += dy;
   rz += dz;
@@ -200,7 +206,6 @@ class Button extends Thing {
   @Override
   protected void _draw() {
     if (shape == null) {
-      println("Creating ButtonShape");
       shape = createShape(GROUP);
       PShape[] children = cylinder(w / 2.0, h / 2.0, BUTTON_RAD, STUB, tindex);
       shape.addChild(children[0]);
@@ -224,7 +229,12 @@ class Display extends Thing {
     if (shape == null) {
       shape = createShape();
       shape.beginShape(QUAD);
-      shape.texture(panelTex);
+      if (wireframe) {
+        shape.noFill();
+        shape.stroke(unhex(WIRE_COLOUR));
+      } else {
+        shape.texture(panelTex);
+      }
       shape.vertex(0, 0, z + d + DECAL, 0, 0);
       shape.vertex(0, h, z + d + DECAL, 0, panelTex.height);
       shape.vertex(w, h, z + d + DECAL, panelTex.width, panelTex.height);
@@ -249,7 +259,12 @@ class Grill extends Thing {
     if (shape == null) {
       shape = createShape();
       shape.beginShape(QUAD);
-      shape.texture(grillTex);
+      if (wireframe) {
+        shape.noFill();
+        shape.stroke(unhex(WIRE_COLOUR));
+      } else {
+        shape.texture(grillTex);
+      }
       shape.vertex(0, 0, z + d + DECAL, 0, 0);
       shape.vertex(0, h, z + d + DECAL, 0, grillTex.height);
       shape.vertex(w, h, z + d + DECAL, grillTex.width, grillTex.height);
@@ -271,18 +286,23 @@ class Right extends Thing {
 
   @Override
   protected void _draw() {
-    if (shape == null) {
-      shape = createShape();
-      shape.beginShape(QUAD);
-      shape.texture(rightTex);
-      // just a fraction above the body
-      shape.vertex(0, 0, Body.BODY_DEPTH + DECAL, 0, 0);
-      shape.vertex(0, h, Body.BODY_DEPTH + DECAL, 0, rightTex.height);
-      shape.vertex(w, h, Body.BODY_DEPTH + DECAL, rightTex.width, rightTex.height);
-      shape.vertex(w, 0, Body.BODY_DEPTH + DECAL, rightTex.width, 0);
-      shape.endShape();
+    if (wireframe) {
+      // just a decal - do absolutely nothing
+    } else {
+      // define and use shape
+      if (shape == null) {
+        shape = createShape();
+        shape.beginShape(QUAD);
+        shape.texture(rightTex);
+        // just a fraction above the body
+        shape.vertex(0, 0, Body.BODY_DEPTH + DECAL, 0, 0);
+        shape.vertex(0, h, Body.BODY_DEPTH + DECAL, 0, rightTex.height);
+        shape.vertex(w, h, Body.BODY_DEPTH + DECAL, rightTex.width, rightTex.height);
+        shape.vertex(w, 0, Body.BODY_DEPTH + DECAL, rightTex.width, 0);
+        shape.endShape();
+      }
+      shape(shape);
     }
-    shape(shape);
   }
 }
 

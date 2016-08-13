@@ -21,8 +21,13 @@ class Tile {
   void generateTile() {
     s = createShape();
     s.beginShape(QUADS);
-    s.noStroke();
-    s.fill(unhex(BACKGROUND));
+    if (wireframe) {
+      s.noFill();
+      s.stroke(unhex(WIRE_COLOUR));
+    } else {
+      s.noStroke();
+      s.fill(unhex(BACKGROUND));
+    }
     // top
     s.vertex(0, 0, z + d);
     s.vertex(w, 0, z + d);
