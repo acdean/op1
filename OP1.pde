@@ -22,6 +22,7 @@ public static final float W2 = W + S + W; // double width key
 public static final float WH = ((W + S + W + S + W) - S) / 2; // W and a half - for black keys
 public static final float H2 = H + S + H; // double height key
 
+public static final int SEGMENTS = 20; //24;
 public static final float BUTTON_RAD = 50; // buttons are 25 + 100 + 25 => RAD = 50
 
 public static final float TW = 158; // texture width multiplier
@@ -156,6 +157,8 @@ void draw() {
   translate(-1404, -470);  // centre - calculated in Body._draw
   lights();
   directionalLight(128, 128, 128, 0, 0, 1);  // reverse angle light for backside
+  directionalLight(128, 128, 128, 1, 1, 0);  // light from north west
+  directionalLight(128, 128, 128, -1, -1, 0);  // light from south east
   noStroke();
   for (Thing thing : things) {
     thing.draw();
@@ -191,7 +194,6 @@ class VolumeButton extends Thing {
 }
 
 // simple textured round button
-public static int SEGMENTS = 24;
 class Button extends Thing {
 
   // one of these for each button - because of decal
