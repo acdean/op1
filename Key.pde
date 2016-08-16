@@ -6,8 +6,8 @@ PShape keyShape;
 
 class Key extends Thing {
 
-  Key(float x, float y) {
-    super(tile1x2, x, y);
+  Key(Tile tile, float x, float y) {
+    super(tile, x, y);
     h = H2;
     z = 0;
   }
