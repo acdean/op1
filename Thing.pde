@@ -11,8 +11,12 @@ class Thing {
   PShape shape;
   float x, y, z;
   float w, h, d;
+  boolean wireframe;
 
   Thing(Tile t, float x, float y) {
+    this(t, x, y, false);
+  }
+  Thing(Tile t, float x, float y, boolean wireframe) {
     baseTile = t;
     this.x = x;
     this.y = y;
@@ -20,6 +24,7 @@ class Thing {
     this.w = W;
     this.h = H;
     this.d = STUB;
+    this.wireframe = wireframe;
   }
 
   void draw() {
@@ -122,6 +127,7 @@ class Thing {
       p2.vertex(bx + r * cos(a), by + r * sin(a), z + d + h);
     }
     p2.endShape();
-    return new PShape[] {p1, p2};
+    // returning sides first as there appears to be a bug in 3.1.1
+    return new PShape[] {p2, p1};
   }
 }

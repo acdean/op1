@@ -6,8 +6,8 @@ class BlackKey extends Thing {
 
   int allignment;
 
-  BlackKey(Tile tile, float x, float y, int allignment) {
-    super(tile, x, y);
+  BlackKey(Tile tile, float x, float y, boolean wireframe, int allignment) {
+    super(tile, x, y, wireframe);
     if (allignment == RIGHT || allignment == LEFT) {
       // this key is 1.5 wide
       w = WH;

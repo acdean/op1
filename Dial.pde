@@ -2,8 +2,8 @@
 class Dial extends Thing {
   short tindex;
 
-  Dial(Tile tile, float x, float y, int tindex) {
-    super(tile, x, y);
+  Dial(Tile tile, float x, float y, boolean wireframe, int tindex) {
+    super(tile, x, y, wireframe);
     w = W2;
     h = H2;
     this.tindex = (short)tindex;

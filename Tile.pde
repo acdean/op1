@@ -1,3 +1,18 @@
+
+// all the tile types
+class Tiles {
+  public Tile tile1x1, tile1x2, tile2x1, tile2x2, tile4x2, tile1_5x1;
+  
+  public Tiles(boolean wireframe) {
+    tile1x1 = new Tile(1, 1, wireframe);
+    tile1x2 = new Tile(1, 2, wireframe);
+    tile2x1 = new Tile(2, 1, wireframe);
+    tile2x2 = new Tile(2, 2, wireframe);
+    tile4x2 = new Tile(4, 2, wireframe);
+    tile1_5x1 = new Tile(1.5, 1, wireframe);
+  }
+}
+
 // new class to hold a tile
 // this is a thin rectangle
 // Each thing will position the relevant tile
@@ -5,20 +20,20 @@ class Tile {
   PShape s;
   float w, h, d, z;
 
-  Tile(float w, float h) {
+  Tile(float w, float h, boolean wireframe) {
     // TODO spacing is slightly wrong for 1.5 width keys
     this.w = W * w + (w - 1.0) * S;  // nb spacing
     this.h = H * h + (h - 1.0) * S;
     this.z = -STUB;
     this.d = STUB;
-    generateTile();
+    generateTile(wireframe);
   }
   
   void draw() {
     shape(s);
   }
   
-  void generateTile() {
+  void generateTile(boolean wireframe) {
     s = createShape();
     s.beginShape(QUADS);
     if (wireframe) {

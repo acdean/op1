@@ -1,7 +1,10 @@
 // a spinning op-1
 // acd 2016
 // TODO
-// nothing...
+// there appears to be a bug in 3.1.1 which draws a line from the end of evey quad in a QUAD STRIP
+// works fine on 3.0.b7
+// better knobs (textured, curved bottoms)
+// texture some of the other sides. feet?
 
 import java.util.List;
 import peasy.*;
@@ -42,9 +45,8 @@ PImage dialTex;
 PImage rightTex;
 float rx, ry, rz, dx, dy, dz;
 
-boolean wireframe = false;
 boolean record = false;
-Model model;
+Model model1, model2;
 
 void setup() {
   size(1280, 720, P3D);
@@ -61,15 +63,12 @@ void setup() {
   dy = random(-.02, .02);
   dz = random(-.02, .02);
   
-  model = new Model();
+  //model1 = new Model(false);  // wireframe
+  model2 = new Model(true);  // not wireframe
 }
 
 void draw() {
-  if (wireframe) {
-    background(0);
-  } else {
-    background(255);
-  }
+  background(128);
   rx += dx;
   ry += dy;
   rz += dz;
@@ -84,7 +83,10 @@ void draw() {
   noStroke();
 
   // draw the actual model
-  model.draw();
+  //model1.draw();
+  //rotateX(rx);
+  //rotateY(ry);
+  model2.draw();
 
   if (record) {
     saveFrame("op1_####.jpg");
@@ -93,4 +95,3 @@ void draw() {
     }
   }
 }
-

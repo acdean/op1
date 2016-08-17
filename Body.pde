@@ -6,8 +6,8 @@ class Body extends Thing {
   PShape shape = null;
   int allignment;
 
-  Body(float x, float y) {
-    super(null, x, y);
+  Body(float x, float y, boolean wireframe) {
+    super(null, x, y, wireframe);
   }
 
   // /-------\
@@ -99,9 +99,9 @@ class Body extends Thing {
       sides.endShape();
 
       shape = createShape(GROUP);
+      shape.addChild(sides);
       shape.addChild(topFace);
       shape.addChild(bottomFace);
-      shape.addChild(sides);
     }
     shape(shape);
   }

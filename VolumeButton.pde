@@ -1,8 +1,8 @@
 // similar to dial / buttom
 class VolumeButton extends Thing {
 
-  VolumeButton(Tile tile, float x, float y) {
-    super(tile, x, y);
+  VolumeButton(Tile tile, float x, float y, boolean wireframe) {
+    super(tile, x, y, wireframe);
     w = W2;
   }
 

@@ -1,8 +1,8 @@
 // tile and a decal
 class Grill extends Thing {
 
-  Grill(Tile tile, float x, float y) {
-    super(tile, x, y);
+  Grill(Tile tile, float x, float y, boolean wireframe) {
+    super(tile, x, y, wireframe);
     w = W2;
     h = H2;
   }

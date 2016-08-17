@@ -4,8 +4,8 @@ class Button extends Thing {
   // one of these for each button - because of decal
   short tindex;
 
-  Button(Tile tile, float x, float y, int tindex) {
-    super(tile, x, y);
+  Button(Tile tile, float x, float y, boolean wireframe, int tindex) {
+    super(tile, x, y, wireframe);
     this.tindex = (short)tindex;
   }
 

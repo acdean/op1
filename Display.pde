@@ -1,8 +1,8 @@
 // tile and a decal
 class Display extends Thing {
 
-  Display(Tile tile, float x, float y) {
-    super(tile, x, y);
+  Display(Tile tile, float x, float y, boolean wireframe) {
+    super(tile, x, y, wireframe);
     w = W + S + W + S + W + S + W;
     h = H2;
   }

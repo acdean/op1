@@ -1,15 +1,14 @@
 // moved Key to own class as it's kind long
 
-// global variable - this way there's only one
-// (gets around problems with static in inline classes)
-PShape keyShape;
-
 class Key extends Thing {
 
-  Key(Tile tile, float x, float y) {
-    super(tile, x, y);
+  PShape keyShape;  // all keys share the same keyshape
+  
+  Key(Tile tile, PShape keyShape, float x, float y, boolean wireframe) {
+    super(tile, x, y, wireframe);
     h = H2;
     z = 0;
+    this.keyShape = keyShape;
   }
 
   // elongated version of button
@@ -75,8 +74,8 @@ class Key extends Thing {
       
       // create actual shape
       keyShape = createShape(GROUP);
-      keyShape.addChild(face);
       keyShape.addChild(sides);
+      keyShape.addChild(face);
     }
     shape(keyShape);
   }

@@ -1,8 +1,8 @@
 // no tile, only a decal
 class Right extends Thing {
 
-  Right(float x, float y) {
-    super(null, x, y);
+  Right(float x, float y, boolean wireframe) {
+    super(null, x, y, wireframe);
     w = W;                  // single button width
     h = (6 * H) + (5 * S);  // 6 buttons high
   }
