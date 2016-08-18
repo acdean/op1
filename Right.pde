@@ -28,3 +28,4 @@ class Right extends Thing {
     }
   }
 }
+

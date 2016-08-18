@@ -19,3 +19,4 @@ class VolumeButton extends Thing {
     shape(shape);
   }
 }
+

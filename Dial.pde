@@ -220,3 +220,4 @@ class Dial extends Thing {
     shape(shape);
   }
 }
+

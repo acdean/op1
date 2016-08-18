@@ -20,3 +20,4 @@ class Button extends Thing {
     shape(shape);
   }
 }
+

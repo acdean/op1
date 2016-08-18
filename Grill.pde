@@ -27,3 +27,4 @@ class Grill extends Thing {
     shape(shape);
   }
 }
+

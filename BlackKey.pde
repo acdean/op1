@@ -39,3 +39,4 @@ class BlackKey extends Thing {
     shape(shape);
   }
 }
+

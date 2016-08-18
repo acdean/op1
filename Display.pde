@@ -27,3 +27,4 @@ class Display extends Thing {
     shape(shape);
   }
 }
+
