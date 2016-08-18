@@ -51,7 +51,7 @@ boolean record = false;
 Model model1, model2;
 
 void setup() {
-  size(1280, 720, P3D);
+  size(1280, 750, P3D);
   cam = new PeasyCam(this, 1600);
   // texture
   tex = loadImage("op1.png");
@@ -66,7 +66,7 @@ void setup() {
   dz = random(-.02, .02);
   
   //model1 = new Model(true);  // wireframe
-  model2 = new Model(false);  // not wireframe
+  model2 = new Model(false);
 }
 
 void draw() {
