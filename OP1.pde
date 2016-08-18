@@ -27,6 +27,8 @@ public static final float H2 = H + S + H; // double height key
 
 public static final int SEGMENTS = 20; //24;
 public static final float BUTTON_RAD = 50; // buttons are 25 + 100 + 25 => RAD = 50
+public static final float DIAL_RAD = 90; // radius of bottom of dial (top is BUTTOM_RAD)
+public static final float DIAL_CURVE = (DIAL_RAD - BUTTON_RAD); // radius of curve at bottom of dial
 
 public static final float TW = 158; // texture width multiplier
 public static final float TH = 158; // texture height multiplier
@@ -63,8 +65,8 @@ void setup() {
   dy = random(-.02, .02);
   dz = random(-.02, .02);
   
-  //model1 = new Model(false);  // wireframe
-  model2 = new Model(true);  // not wireframe
+  //model1 = new Model(true);  // wireframe
+  model2 = new Model(false);  // not wireframe
 }
 
 void draw() {
