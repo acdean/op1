@@ -172,13 +172,14 @@ class Dial extends Thing {
       // D-C
       // first row (vertical)
       for (int i = 0 ; i < SEGMENTS ; i++) {
-//        int j = (i + 1) % SEGMENTS;
+        sides.normal(points.get(i).x, points.get(i).y, 0.0);
         sides.vertex(w / 2 + points.get(i).x * BUTTON_RAD, h / 2 + points.get(i).y * BUTTON_RAD, DIAL_HEIGHT);
-//        sides.vertex(w / 2 + points.get(j).x * BUTTON_RAD, h / 2 + points.get(j).y * BUTTON_RAD, DIAL_HEIGHT);
-//        sides.vertex(w / 2 + points.get(j).x * BUTTON_RAD, h / 2 + points.get(j).y * BUTTON_RAD, DIAL_CURVE);
+        sides.normal(points.get(i).x, points.get(i).y, 0.0);
         sides.vertex(w / 2 + points.get(i).x * BUTTON_RAD, h / 2 + points.get(i).y * BUTTON_RAD, DIAL_CURVE);
       }
+      sides.normal(points.get(0).x, points.get(0).y, 0.0);
       sides.vertex(w / 2 + points.get(0).x * BUTTON_RAD, h / 2 + points.get(0).y * BUTTON_RAD, DIAL_HEIGHT);
+      sides.normal(points.get(0).x, points.get(0).y, 0.0);
       sides.vertex(w / 2 + points.get(0).x * BUTTON_RAD, h / 2 + points.get(0).y * BUTTON_RAD, DIAL_CURVE);
       sides.endShape();
       // add to main shape
@@ -202,15 +203,21 @@ class Dial extends Thing {
           row.noStroke();
           row.fill(unhex(KEY_COLOUR));
         }
+        PVector n; // normal
         for (int i = 0 ; i < SEGMENTS ; i++) {
-//          int j = (i + 1) % SEGMENTS;
+          n = calcNormal(a0, i * (TWO_PI / SEGMENTS));
+          row.normal(n.x, n.y, n.z);
           row.vertex(w / 2 + r0 * points.get(i).x, h / 2 + r0 * points.get(i).y, h0);
-//          sides.vertex(w / 2 + r0 * points.get(j).x, h / 2 + r0 * points.get(j).y, h0);
-//          sides.vertex(w / 2 + r1 * points.get(j).x, h / 2 + r1 * points.get(j).y, h1);
+          n = calcNormal(a1, i * (TWO_PI / SEGMENTS));
+          row.normal(n.x, n.y, n.z);
           row.vertex(w / 2 + r1 * points.get(i).x, h / 2 + r1 * points.get(i).y, h1);
         }
         // repeat the first two
+        n = calcNormal(a0, 0);
+        row.normal(n.x, n.y, n.z);
         row.vertex(w / 2 + r0 * points.get(0).x, h / 2 + r0 * points.get(0).y, h0);
+        n = calcNormal(a1, 0);
+        row.normal(n.x, n.y, n.z);
         row.vertex(w / 2 + r1 * points.get(0).x, h / 2 + r1 * points.get(0).y, h1);
         row.endShape();
         // add to main shape
@@ -219,5 +226,33 @@ class Dial extends Thing {
     }
     shape(shape);
   }
-}
+  
+  PVector calcNormal(float a1, float a2) {
+    PVector n = new PVector(1, 0, 0);
+    rotateY(n, a1 + PI); // up / down
+    rotateZ(n, a2 + HALF_PI); // around (not sure why i need the HALF_PI here)
+    println("normal[" + degrees(a1) + "][" + degrees(a2) + "]: [" + n.x + "][" + n.y + "][" + n.z + "]");
+    return n;
+  }
+  
+  void rotateX(PVector p, float a) {
+    float y = p.y * cos(a) + p.z * sin(a);
+    float z = p.y * -sin(a) + p.z * cos(a);
+    p.y = y;
+    p.z = z;
+  }
 
+  void rotateY(PVector p, float a) {
+    float x = p.x * cos(a) + p.z * sin(a);
+    float z = p.x * -sin(a) + p.z * cos(a);
+    p.x = x;
+    p.z = z;
+  }
+
+  void rotateZ(PVector p, float a) {
+    float x = p.x * cos(a) + p.y * sin(a);
+    float y = p.x * -sin(a) + p.y * cos(a);
+    p.x = x;
+    p.y = y;
+  }
+}

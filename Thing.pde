@@ -121,9 +121,11 @@ class Thing {
       p2.noStroke();
       p2.fill(unhex(KEY_COLOUR));
     }
-    for (int i = start ; i <= end ; i++) {
+    for (int i = start ; i <= end ; i++) { // NB includes final point
       float a = TWO_PI * i / SEGMENTS;
+      p2.normal(cos(a), sin(a), 0.0);
       p2.vertex(bx + r * cos(a), by + r * sin(a), z + d);
+      p2.normal(cos(a), sin(a), 0.0);
       p2.vertex(bx + r * cos(a), by + r * sin(a), z + d + h);
     }
     p2.endShape();
@@ -131,4 +133,3 @@ class Thing {
     return new PShape[] {p2, p1};
   }
 }
-
