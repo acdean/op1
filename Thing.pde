@@ -6,6 +6,7 @@ float dialTextureY(short tindex, float in) {
   return (W2 / 2) + in;
 }
 
+// everything is a Thing
 class Thing {
   Tile baseTile;
   PShape shape;
@@ -13,9 +14,6 @@ class Thing {
   float w, h, d;
   boolean wireframe;
 
-  Thing(Tile t, float x, float y) {
-    this(t, x, y, false);
-  }
   Thing(Tile t, float x, float y, boolean wireframe) {
     baseTile = t;
     this.x = x;
@@ -41,17 +39,20 @@ class Thing {
     println("_draw: must override this");
   }
 
+  // translates from button grid x to world x
+  // origin is the top left of the top left button
   float x2x(float in) {
     // special cases for black buttons
     if (in != floor(in)) {
       // 4.5, 5.5, 8.5, 11.5, 12.5, 15.5
-      return floor(in) * (W + S) - W + WH; 
+      return floor(in) * (W + S) - W + WH - (TOTAL_W / 2);
     }
-    return (in * (W + S));
+    return (in * (W + S)) - (TOTAL_W / 2);
   }
 
+  // translates from button grid y to world y
   float y2y(float in) {
-    return (in * (H + S));
+    return (in * (H + S) - (TOTAL_H / 2));
   }
 
   float textureX(short tindex, float in) {
@@ -85,21 +86,17 @@ class Thing {
     // top
     PShape p1 = createShape();
     p1.beginShape(POLYGON);
-    if (wireframe) {
-      p1.noFill();
-      p1.stroke(unhex(WIRE_COLOUR));
+
+    // texture differs depending on type
+    PImage thisTexture;
+    if (h == STUB) {
+      // standard button
+      thisTexture = buttonTex;
     } else {
-      p1.noStroke();
-      p1.fill(unhex(KEY_COLOUR));
-      if (h == STUB) {
-        // standard button
-        p1.texture(buttonTex);
-      } else {
-        // dial
-        p1.texture(dialTex);
-      }
+      // dial
+      thisTexture = dialTex;
     }
-//    p1.vertex(bx, by, z + d + STUB, textureX(tindex, 0), textureY(tindex, 0));
+    setDrawStyle(p1, wireframe, KEY_COLOUR, thisTexture);
     for (int i = start ; i <= end ; i++) {
       float a = TWO_PI * i / SEGMENTS;
       if (h == STUB) {
@@ -114,13 +111,7 @@ class Thing {
     // sides
     PShape p2 = createShape();
     p2.beginShape(QUAD_STRIP);
-    if (wireframe) {
-      p2.noFill();
-      p2.stroke(unhex(WIRE_COLOUR));
-    } else {
-      p2.noStroke();
-      p2.fill(unhex(KEY_COLOUR));
-    }
+    setDrawStyle(p2, wireframe, KEY_COLOUR);
     for (int i = start ; i <= end ; i++) { // NB includes final point
       float a = TWO_PI * i / SEGMENTS;
       p2.normal(cos(a), sin(a), 0.0);

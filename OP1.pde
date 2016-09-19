@@ -24,6 +24,8 @@ public static final float DECAL = .02; // height of decal
 public static final float W2 = W + S + W; // double width key
 public static final float WH = ((W + S + W + S + W) - S) / 2; // W and a half - for black keys
 public static final float H2 = H + S + H; // double height key
+public static final float TOTAL_W = (18 * W) + (17 * S); // includes 1 extra column for right
+public static final float TOTAL_H = (6 * H) + (5 * S); // doesn't include body because of origin
 
 public static final int SEGMENTS = 20; //24;
 public static final float BUTTON_RAD = 50; // buttons are 25 + 100 + 25 => RAD = 50
@@ -65,8 +67,10 @@ void setup() {
   dy = random(-.02, .02);
   dz = random(-.02, .02);
   
-  //model1 = new Model(true);  // wireframe
+  model1 = new Model(true);  // wireframe
   model2 = new Model(false);
+  println("Total: " + TOTAL_W + ":" + TOTAL_H
+  );
 }
 
 void draw() {
@@ -74,10 +78,9 @@ void draw() {
   rx += dx;
   ry += dy;
   rz += dz;
-  //rotateX(rx);
-  //rotateY(ry);
-  //rotateZ(rz);
-  translate(-1404, -470);  // centre - calculated in Body._draw
+  rotateX(rx);
+  rotateY(ry);
+  rotateZ(rz);
   lights();
   directionalLight(128, 128, 128, 0, 0, 1);  // reverse angle light for backside
   directionalLight(128, 128, 128, 1, 1, 0);  // light from north west
@@ -85,15 +88,32 @@ void draw() {
   noStroke();
 
   // draw the actual model
-  //model1.draw();
-  //rotateX(rx);
-  //rotateY(ry);
+  model1.draw();
+  rotateX(rx);
+  rotateY(ry);
   model2.draw();
 
   if (record) {
     saveFrame("op1_####.jpg");
     if (frameCount > 1000) {
       exit();
+    }
+  }
+}
+
+// sets stroke, fill etc depending on wireframe
+void setDrawStyle(PShape shape, boolean wireframe, String c) {
+  setDrawStyle(shape, wireframe, c, null);
+}
+void setDrawStyle(PShape shape, boolean wireframe, String c, PImage texture) {
+  if (wireframe) {
+    shape.noFill();
+    shape.stroke(unhex(WIRE_COLOUR));
+  } else {
+    shape.noStroke();
+    shape.fill(unhex(c));
+    if (texture != null) {
+      shape.texture(texture);
     }
   }
 }

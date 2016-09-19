@@ -15,9 +15,10 @@ class Dial extends Thing {
   }
   
   // a textured tile, a textured top, a straight shaft
+  @Deprecated
   protected void _drawOriginal() {
     if (shape == null) {
-      println("Creating Dial");
+      println("Creating Dial1");
       shape = createShape(GROUP);
       // a decal on the tile and a cylinder
       if (!wireframe) {
@@ -44,9 +45,10 @@ class Dial extends Thing {
 
   // second version - a curved shaft done using QUADS
   // shape is ok but it looks like it's flat shaded which jars with the power button
+  @Deprecated
   protected void _draw2() {
     if (shape == null) {
-      println("Creating Dial");
+      println("Creating Dial2");
       shape = createShape(GROUP);
       // flared cylinder, BUTTON_RAD at the top, BUTTON_RAD2 at the bottom
       ArrayList<PVector> points = new ArrayList();
@@ -60,14 +62,7 @@ class Dial extends Thing {
       // top
       PShape top = createShape();
       top.beginShape(POLYGON);
-      if (wireframe) {
-        top.noFill();
-        top.stroke(unhex(WIRE_COLOUR));
-      } else {
-        top.noStroke();
-        top.fill(unhex(KEY_COLOUR));
-        top.texture(dialTex);
-      }
+      setDrawStyle(top, wireframe, KEY_COLOUR, dialTex);
       float a = 0;
       for (PVector point : points) {
         a += TWO_PI / points.size();
@@ -80,13 +75,8 @@ class Dial extends Thing {
       // sides - do this as quads or three quad strips?
       PShape sides = createShape();
       sides.beginShape(QUADS);
-      if (wireframe) {
-        sides.noFill();
-        sides.stroke(unhex(WIRE_COLOUR));
-      } else {
-        sides.noStroke();
-        sides.fill(unhex(KEY_COLOUR));
-      }
+      setDrawStyle(sides, wireframe, KEY_COLOUR);
+
       // A-B
       // D-C
       // first row (vertical)
@@ -125,7 +115,7 @@ class Dial extends Thing {
   // third version - a curved shaft done using QUAD_STRIPS
   protected void _draw3() {
     if (shape == null) {
-      println("Creating Dial");
+      println("Creating Dial3");
       shape = createShape(GROUP);
       // flared cylinder, BUTTON_RAD at the top, BUTTON_RAD2 at the bottom
       ArrayList<PVector> points = new ArrayList();
@@ -139,14 +129,7 @@ class Dial extends Thing {
       // top
       PShape top = createShape();
       top.beginShape(POLYGON);
-      if (wireframe) {
-        top.noFill();
-        top.stroke(unhex(WIRE_COLOUR));
-      } else {
-        top.noStroke();
-        top.fill(unhex(KEY_COLOUR));
-        top.texture(dialTex);
-      }
+      setDrawStyle(top, wireframe, KEY_COLOUR, dialTex);
       float a = 0;
       for (PVector point : points) {
         a += TWO_PI / points.size();
@@ -161,13 +144,8 @@ class Dial extends Thing {
       // sides - do this as quads or three quad strips?
       PShape sides = createShape();
       sides.beginShape(QUAD_STRIP);
-      if (wireframe) {
-        sides.noFill();
-        sides.stroke(unhex(WIRE_COLOUR));
-      } else {
-        sides.noStroke();
-        sides.fill(unhex(KEY_COLOUR));
-      }
+      setDrawStyle(sides, wireframe, KEY_COLOUR);
+
       // A-B
       // D-C
       // first row (vertical)
@@ -196,13 +174,8 @@ class Dial extends Thing {
         float h1 = DIAL_CURVE * (1 - sin(a1));
         PShape row = createShape();
         row.beginShape(QUAD_STRIP);
-        if (wireframe) {
-          row.noFill();
-          row.stroke(unhex(WIRE_COLOUR));
-        } else {
-          row.noStroke();
-          row.fill(unhex(KEY_COLOUR));
-        }
+        setDrawStyle(row, wireframe, KEY_COLOUR);
+
         PVector n; // normal
         for (int i = 0 ; i < SEGMENTS ; i++) {
           n = calcNormal(a0, i * (TWO_PI / SEGMENTS));
@@ -231,7 +204,7 @@ class Dial extends Thing {
     PVector n = new PVector(1, 0, 0);
     rotateY(n, a1 + PI); // up / down
     rotateZ(n, a2 + HALF_PI); // around (not sure why i need the HALF_PI here)
-    println("normal[" + degrees(a1) + "][" + degrees(a2) + "]: [" + n.x + "][" + n.y + "][" + n.z + "]");
+    //println("normal[" + degrees(a1) + "][" + degrees(a2) + "]: [" + n.x + "][" + n.y + "][" + n.z + "]");
     return n;
   }
   

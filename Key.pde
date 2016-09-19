@@ -40,13 +40,7 @@ class Key extends Thing {
       // top shape
       PShape face = createShape();
       face.beginShape(POLYGON);
-      if (wireframe) {
-        face.noFill();
-        face.stroke(unhex(WIRE_COLOUR));
-      } else {
-        face.noStroke();
-        face.fill(unhex(KEY_COLOUR));
-      }
+      setDrawStyle(face, wireframe, KEY_COLOUR);
       for (PVector p : points) {
         face.vertex(p.x, p.y, z + d);
       }
@@ -56,13 +50,7 @@ class Key extends Thing {
 
       PShape sides = createShape();
       sides.beginShape(QUAD_STRIP);
-      if (wireframe) {
-        sides.noFill();
-        sides.stroke(unhex(WIRE_COLOUR));
-      } else {
-        sides.fill(unhex(KEY_COLOUR));
-        sides.noStroke();
-      }
+      setDrawStyle(sides, wireframe, KEY_COLOUR);
       for (PVector p : points) {
         sides.vertex(p.x, p.y, z);
         sides.vertex(p.x, p.y, z + d);
@@ -80,4 +68,3 @@ class Key extends Thing {
     shape(keyShape);
   }
 }
-
