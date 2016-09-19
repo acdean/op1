@@ -21,7 +21,7 @@ class Tile {
   float w, h, d, z;
 
   Tile(float w, float h, boolean wireframe) {
-    // TODO spacing is slightly wrong for 1.5 width keys
+    // TODO i think spacing is slightly wrong for 1.5 width keys
     this.w = W * w + (w - 1.0) * S;  // nb spacing
     this.h = H * h + (h - 1.0) * S;
     this.z = -STUB;
@@ -36,13 +36,7 @@ class Tile {
   void generateTile(boolean wireframe) {
     s = createShape();
     s.beginShape(QUADS);
-    if (wireframe) {
-      s.noFill();
-      s.stroke(unhex(WIRE_COLOUR));
-    } else {
-      s.noStroke();
-      s.fill(unhex(BACKGROUND));
-    }
+    setDrawStyle(s, wireframe, BACKGROUND);
     // top
     s.vertex(0, 0, z + d);
     s.vertex(w, 0, z + d);
@@ -77,4 +71,3 @@ class Tile {
     s.endShape();
   }
 }
-

@@ -50,13 +50,7 @@ class Body extends Thing {
       
       PShape topFace = createShape();
       topFace.beginShape(POLYGON);
-      if (wireframe) {
-        topFace.noFill();
-        topFace.stroke(unhex(WIRE_COLOUR));
-      } else {
-        topFace.fill(unhex(BACKGROUND));
-        topFace.noStroke();
-      }
+      setDrawStyle(topFace, wireframe, BACKGROUND);
       for (PVector p : points) {
         topFace.vertex(p.x, p.y, z1);
       }
@@ -66,13 +60,7 @@ class Body extends Thing {
       // bottom face is reverse order
       PShape bottomFace = createShape();
       bottomFace.beginShape(POLYGON);
-      if (wireframe) {
-        bottomFace.noFill();
-        bottomFace.stroke(unhex(WIRE_COLOUR));
-      } else {
-        bottomFace.fill(unhex(BACKGROUND));
-        bottomFace.noStroke();
-      }
+      setDrawStyle(bottomFace, wireframe, BACKGROUND);
       for (int i = points.size() - 1 ; i >= 0 ; i--) { 
         PVector p = points.get(i);
         bottomFace.vertex(p.x, p.y, z0);
@@ -83,13 +71,7 @@ class Body extends Thing {
       // sides
       PShape sides = createShape();
       sides.beginShape(QUAD_STRIP);
-      if (wireframe) {
-        sides.noFill();
-        sides.stroke(unhex(WIRE_COLOUR));
-      } else {
-        sides.fill(unhex(BACKGROUND));
-        sides.noStroke();
-      }
+      setDrawStyle(sides, wireframe, BACKGROUND);
       for (PVector p : points) {
         sides.vertex(p.x, p.y, z0);
         sides.vertex(p.x, p.y, z1);
@@ -106,4 +88,3 @@ class Body extends Thing {
     shape(shape);
   }
 }
-

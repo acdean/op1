@@ -12,12 +12,7 @@ class Grill extends Thing {
     if (shape == null) {
       shape = createShape();
       shape.beginShape(QUAD);
-      if (wireframe) {
-        shape.noFill();
-        shape.stroke(unhex(WIRE_COLOUR));
-      } else {
-        shape.texture(grillTex);
-      }
+      setDrawStyle(shape, wireframe, KEY_COLOUR, grillTex);
       shape.vertex(0, 0, z + d + DECAL, 0, 0);
       shape.vertex(0, h, z + d + DECAL, 0, grillTex.height);
       shape.vertex(w, h, z + d + DECAL, grillTex.width, grillTex.height);
@@ -27,4 +22,3 @@ class Grill extends Thing {
     shape(shape);
   }
 }
-
