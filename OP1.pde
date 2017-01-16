@@ -69,8 +69,7 @@ void setup() {
   
   model1 = new Model(true);  // wireframe
   model2 = new Model(false);
-  println("Total: " + TOTAL_W + ":" + TOTAL_H
-  );
+  println("Total: " + TOTAL_W + ":" + TOTAL_H);
 }
 
 void draw() {
@@ -115,5 +114,11 @@ void setDrawStyle(PShape shape, boolean wireframe, String c, PImage texture) {
     if (texture != null) {
       shape.texture(texture);
     }
+  }
+}
+
+void keyPressed() {
+  if (key == 's') {
+    saveFrame("frame####.png");
   }
 }
